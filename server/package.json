@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "node": "^21.6.2"
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Backend code for Monitering-System Project",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swapnil-sharma7222/Monitering-System.git"
+  },
+  "author": "Swapnil Sharma & Subhashini Chauhan & Akshay Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/swapnil-sharma7222/Monitering-System/issues"
+  },
+  "homepage": "https://github.com/swapnil-sharma7222/Monitering-System#readme"
+}
