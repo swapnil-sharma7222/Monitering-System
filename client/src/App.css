@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  height: 100%;
+  width: 100%;
 }
 
 .App-logo {
@@ -34,5 +36,25 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.Bar {
+  height: 100%;
+  width: 100%;
+}
+
+/* Media queries for tablets (landscape) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .App-logo {
+    height: 30vmin;
+  }
+}
+
+/* Media queries for phones */
+@media screen and (max-width: 767px) {
+  .App-logo {
+    height: 20vmin;
+    
   }
 }
