@@ -15,7 +15,7 @@ export default function App() {
         {/* <SignInPage/> */}
         <Routes>
           <Route exact path="/" element={<NavBar />} />
-         <Route path='/admin' element ={<Admin />}/>
+          <Route path="/admin" element={<Admin />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/locality" element=""></Route> //exact path is not fixed
