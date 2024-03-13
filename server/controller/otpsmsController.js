@@ -1,40 +1,45 @@
-const {AUTH_SID,AUTH_TOKEN,SERVICE_ID}=process.env;
-const client=require('twilio')(AUTH_TOKEN,AUTH_SID,{lazyLoading:true})
+const {accountSid,TWILIO_AUTH_TOKEN,TWILIO_SERVICE_SID}=process.env;
+const client=require('twilio')(accountSid,TWILIO_AUTH_TOKEN,{lazyLoading:true})
 
-const sendotp=async(req,res,next)=>{
-    const {number,code}=req.body;
+const sendotp= async (req,res,next)=>{
+    const {number,countryCode}=req.body;
     try{
-        const otpResponse=await client.verify.v2.services({
-            to: `+${code}${number}`,
+        const otpResponse=await client.verify.v2.services(TWILIO_SERVICE_SID).verifications.create({
+            to: `+${countryCode}${number}`,
             channel:"sms",
         });
         res.status(200).send(`OTP send successfully ${JSON.stringify(otpResponse)}`);
     } catch(error){
         res.status(400).json({
             success: false,
-            message: "somenthing wne t erongz" + error.message,
+            message: "somenthing went wrong" + error.message,
           });
     }
 };
 
-const verifyotp=async (req,res,next)=>{
-    const {number,code,otp}=req.bodyl
+const verifyotp= async (req,res,next)=>{
+    const {number,countryCode,otp}= req.body;
     try{
-        const verifiedResponse=await client.verify.v2.services(SERVICE_ID).verifications.create({
-            to:`+${code}${number}`,
+        const verifiedResponse=await client
+        .verify
+        .v2
+        .services(TWILIO_SERVICE_SID)
+        .verificationChecks
+        .create({
+            to:`+${countryCode}${number}`,
             code:otp,
-        })
+        });
         res.status(200).send(`OTP verified successfully ${JSON.stringify(verifiedResponse)}`);
 
     }
     catch(error){
         res.status(400).json({
             success: false,
-            message: "somenthing wne t erongz" + error.message,
+            message: "somenthing went wrong " + error.message,
           });
     }
 }
-module.exports={sendotp};
+module.exports={sendotp,verifyotp};
 
 // require('dotenv').config();
 // const axios = require('axios');
