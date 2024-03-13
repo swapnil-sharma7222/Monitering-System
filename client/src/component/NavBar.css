@@ -1,0 +1,26 @@
+.navbar {
+  width: 100%;
+  background-color: #333; /* Dark background for the navbar */
+  overflow: hidden;
+}
+
+.nav-container {
+  max-width: 1200px; /* Max width of the content inside navbar */
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: flex-end; /* Aligns buttons to the right */
+}
+
+.nav-buttons button {
+  background-color: #4CAF50; /* Green background for buttons */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px; /* Spacing between buttons */
+  cursor: pointer;
+}
+
+.nav-buttons button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
