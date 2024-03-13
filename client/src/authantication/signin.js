@@ -1,11 +1,14 @@
+
 import React, { useState } from 'react'
 import axios from 'axios'
 import { Link ,Navigate } from 'react-router-dom'
+
 
 const SignInPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [token, setToken]=useState("")
+
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
@@ -15,16 +18,16 @@ const SignInPage = () => {
     setPassword(e.target.value)
   }
 
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     // Handle the sign-in logic here
     console.log('Signing in with:', email, password)
-
     try {
       const response = await axios.post('http://localhost:5000/user/signin', {
         email,
         password,
-      })
+      });
       
       console.log('This is response of handle signin ', response.data)
       setToken(response.data.accessToken)
@@ -37,6 +40,7 @@ const SignInPage = () => {
   return token ? (
     <Navigate to="/admin" />
   ) : (
+
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="email">Email:</label>
