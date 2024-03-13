@@ -5,6 +5,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 connectdb();
+
 require('dotenv').config();
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
@@ -15,7 +16,8 @@ app.use((req, res, next) => {
   next();
 })
 app.use('/locality', require('./routes/userRoutes'))
-app.use('/user', require('./routes/user2Routes'))
+app.use('/user', require('./routes/user2Routes'));
+app.use("/user",require("./routes/otpRoutes"));
 // app.get("/",(req,res)=>{
 //     res.json({message : "get"});
 // });
