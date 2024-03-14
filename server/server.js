@@ -18,9 +18,9 @@ app.use((req, res, next) => {
 app.use('/locality', require('./routes/userRoutes'))
 app.use('/user', require('./routes/user2Routes'));
 app.use("/user",require("./routes/otpRoutes"));
-// app.get("/",(req,res)=>{
-//     res.json({message : "get"});
-// });
+app.use("/accounts",require("./routes/forgetPassword"));
+
+
 app.listen(5000, () => {
   console.log('servering on port 3000....')
 })

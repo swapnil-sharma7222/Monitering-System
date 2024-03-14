@@ -82,9 +82,7 @@ const signin = async (req, res) => {
             id: user.id,
           },
         },
-        // ${process.env.ACCESS_TOKEN_SECRET}
-        process.env.ACCESS_TOKEN_SECERT
-        ,
+        process.env.ACCESS_TOKEN_SECERT,
         { expiresIn: "15m" }
       );
       res.status(200).json({ accessToken });
