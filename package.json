@@ -3,9 +3,12 @@
     "concurrently": "^8.2.2"
   },
   "scripts": {
-  "start": "concurrently \"npm run server\" \"npm run client\"",
-  "server": "nodemon server.js", 
-  "client": "cd frontend && npm start" 
-}
-
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server.js",
+    "client": "cd frontend && npm start"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express-async-handler": "^1.2.0"
+  }
 }
