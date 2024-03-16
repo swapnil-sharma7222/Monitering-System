@@ -1,3 +1,4 @@
+
 const User = require("../models/userModel");
 const OTP = require("../models/otpModel");
 const bcrypt = require("bcrypt");
@@ -40,6 +41,7 @@ const signup = async (req, res) => {
     }
 
     console.log("Hashed Password: ", hashedPassword);
+
     const user = await User.create({
       name,
       email,
