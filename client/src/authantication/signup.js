@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import axios from 'axios'
 import { Link, Navigate, redirect } from 'react-router-dom'
+import { useCustom } from '../context/context'
 
 const SignUpPage = () => {
-  const [email, setEmail] = useState('')
+  const { email, setEmail, name, setName } = useCustom()
   const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
-  const[isSignUp,setIsSingUp]=useState(false)
+  const [isSignUp, setIsSingUp] = useState(false)
 
   const handleEmailChange = (e) => {
+    //console.log(e.target.value)
     setEmail(e.target.value)
   }
   const handleNameChange = (e) => {
@@ -31,15 +32,16 @@ const SignUpPage = () => {
       //   name,
       // })
       // console.log('This is response of handle signin ', response.data)
-      setIsSingUp(true);
-      
+      setIsSingUp(true)
     } catch (error) {
       console.log('Error on signing in', error)
     }
   }
 
-  return (
-    isSignUp?<Navigate to="/admin"/>:<form onSubmit={handleSubmit}>
+  return isSignUp ? (
+    <Navigate to="/verify-otp" state={{ email: email }} />
+  ) : (
+    <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="name">Name:</label>
         <input
@@ -75,4 +77,4 @@ const SignUpPage = () => {
   )
 }
 
-export default SignUpPage
+export default{ SignUpPage}

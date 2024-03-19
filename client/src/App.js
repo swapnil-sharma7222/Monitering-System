@@ -6,6 +6,7 @@ import SignInPage from './authantication/signin'
 import SignUpPage from './authantication/signup'
 import NavBar from './component/Navbar'
 import Admin from './component/Admin'
+import { Otp } from './authantication/otp'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         {/* <BarChart className="Bar" /> */}
         {/* <SignInPage/> */}
         <Routes>
+          <Route path="/verify-otp" element={<Otp/>}/>
           <Route exact path="/" element={<NavBar />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/signin" element={<SignInPage />} />
@@ -25,3 +27,4 @@ export default function App() {
     </div>
   )
 }
+
