@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const signup = async (req, res) => {
   try {
-    const { name, email, password, role, otp } = req.body;
+    const { name, email,phoneNumber, password, role, otp } = req.body;
     if (!name || !email || !password || !otp) {
       return res.status(403).json({
         success: false,
@@ -45,6 +45,7 @@ const signup = async (req, res) => {
     const user = await User.create({
       name,
       email,
+      phoneNumber,
       password: hashedPassword,
       role,
     });
@@ -63,7 +64,7 @@ const signup = async (req, res) => {
 
 };
 
-const signin = async (req, res) => {
+const signinwithEmail = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -96,8 +97,36 @@ const signin = async (req, res) => {
   }
 };
 
-const current = async (req, res) => {
-  res.json(req.user);
-};
+const signinwithPhoneNumber = async (req, res) => {
+  try {
+    const { phoneNumber, password } = req.body;
+    if (!phoneNumber || !password) {
+      res.status(500);
+      throw new Error("All fields are mandatory!");
+    }
+    const user = await User.findOne({ phoneNumber });
+    //compare password with hashedpassword
 
-module.exports = { signup, signin, current };
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const accessToken = jwt.sign(
+        {
+          user: {
+            username: user.username,
+            phoneNumber: user.phoneNumber,
+            id: user.id,
+          },
+        },
+        process.env.ACCESS_TOKEN_SECERT,
+        { expiresIn: "15m" }
+      );
+      res.status(200).json({ accessToken });
+    } else {
+      res.status(401);
+      throw new Error("phoneNumber or password is not valid");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+module.exports = { signup, signinwithEmail, signinwithPhoneNumber };
