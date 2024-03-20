@@ -7,6 +7,7 @@ import SignUpPage from './authantication/signup'
 import NavBar from './component/Navbar'
 import Admin from './component/Admin'
 import { Otp } from './authantication/otp'
+import { ForgotPassword } from './authantication/forgotPassword'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/verify-otp" element={<Otp/>}/>
           <Route exact path="/" element={<NavBar />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/forgot-password" element={<ForgotPassword/>}/>
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/locality" element=""></Route> //exact path is not fixed
