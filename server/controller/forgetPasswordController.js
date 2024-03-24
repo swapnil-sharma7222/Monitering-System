@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 // const  {clientURL} = process.env;
 // const  ENCRYPTION_DECRYPTION_KEY, clientURL = process.env;
 
-// Encryption function
 function encrypt(data, key) {
   const encryptedData = CryptoJS.AES.encrypt(data, key).toString();
   return encryptedData;
@@ -28,10 +27,8 @@ const forgetPassword = async (req, res, next) => {
     
     // Calculate the expiry timestamp by adding the duration to the current time
     let expiryTimestamp = currentTime + expiryDuration;
-    // expiryTimestamp = encrypt(expiryDuration, process.env.ENCRYPTION_DECRYPTION_KEY);
     console.log(expiryTimestamp);
-    //const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
-    const recoveryLink = `${process.env.serverURL}reset-password?email=${email}&expiryTime=${expiryTimestamp}`;
+    const recoveryLink = `${process.env.serverURL}accounts/reset-password?email=${email}&expiryTime=${expiryTimestamp}`;
     console.log(recoveryLink);
     // Check if user is already present
     const checkUserPresent = await User.findOne({ email });
@@ -76,10 +73,8 @@ async function resetPassword(req, res) {
     const encryptedTime = req.query.expiryTime;
     const userEmail = req.query.email;
     console.log(req.query);
-  
     // Decrypt the encrypted time
-    // const decryptedTime = decrypt(encryptedTime, ENCRYPTION_DECRYPTION_KEY);
-    // console.log('Decrypted time:', decryptedTime);
+    // const decryptedTime = decrypt(encryptedTime.toString(), process.env.ENCRYPTION_DECRYPTION_KEY);
     const decryptedTime= encryptedTime;
     const currentTime = Date.now();
     if (currentTime >= decryptedTime) {

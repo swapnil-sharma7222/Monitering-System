@@ -18,10 +18,13 @@ app.use((req, res, next) => {
   next()
 })
 app.use('/locality', require('./routes/userRoutes'))
-app.use('/user', require('./routes/user2Routes'))
-app.use('/user', require('./routes/otpRoutes'))
-app.use('/accounts', require('./routes/forgetPassword'))
+
+app.use('/user', require('./routes/user2Routes'));
+app.use("/user",require('./routes/otpRoutes'));
+app.use("/accounts",require('./routes/forgetPassword'));
+app.use("/ivr-call", require('./routes/ivrCall'));
+
 
 app.listen(5000, () => {
-  console.log('servering on port 3000....')
+  console.log('serving on port 3000....');
 })

@@ -1,4 +1,7 @@
-const {accountSid,TWILIO_AUTH_TOKEN,TWILIO_SERVICE_SID}=process.env;
+// const {accountSid,TWILIO_AUTH_TOKEN,TWILIO_SERVICE_SID}=process.env;
+const accountSid= process.env.accountSid;
+const TWILIO_AUTH_TOKEN= process.env.TWILIO_AUTH_TOKEN;
+const TWILIO_SERVICE_SID= process.env.TWILIO_SERVICE_SID;
 const client=require('twilio')(accountSid,TWILIO_AUTH_TOKEN,{lazyLoading:true})
 
 const sendotp= async (req,res,next)=>{
@@ -12,7 +15,7 @@ const sendotp= async (req,res,next)=>{
     } catch(error){
         res.status(400).json({
             success: false,
-            message: "somenthing went wrong" + error.message,
+            message: "something went wrong" + error.message,
           });
     }
 };
