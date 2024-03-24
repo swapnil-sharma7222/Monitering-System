@@ -1,6 +1,6 @@
 const User = require('./../models/userModel');
 const mailSender = require('./../utils/mailSender');
-const CryptoJS = require('crypto-js');
+// const CryptoJS = require('crypto-js');
 const bcrypt = require('bcrypt');
 // const  {clientURL} = process.env;
 // const  ENCRYPTION_DECRYPTION_KEY, clientURL = process.env;
