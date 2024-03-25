@@ -1,4 +1,5 @@
 const twilio = require('twilio');
+const Responses= require('./../models/responseModel');
 
 // Twilio configurations
 const accountSid = process.env.accountSid;
@@ -7,14 +8,15 @@ const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
 // Create a Twilio client
 const client = new twilio(accountSid, authToken);
-let responses= [];
+let phoneNumber; 
+let data= [];
 // Define routes and controllers
 
 // Endpoint to initiate the IVR call
 const initiateCall = async (req, res) => {
   try {
     const { to } = req.body; // Phone number to call
-
+    phoneNumber= to;
     const call = await client.calls.create({
       url: 'https://c663-2409-40d4-205e-2609-84a0-b4e7-43e4-285.ngrok-free.app/ivr-call/menu',
       to: to,
@@ -56,7 +58,7 @@ function askQuestion(twiml, questionNumber, attempts) {
 
   if (attempts >= maxAttempts) {
     // Move to the next question
-    responses.push(0);
+    data.push(0);
     moveNextQuestion(twiml, questionNumber + 1);
     return;
   }
@@ -101,12 +103,12 @@ const handleUsersChoice = async (req, res) => {
       case '1':
         twiml.say('You selected option one.');
         // Add logic for option one
-        responses.push(1);
+        data.push(1);
         break;
       case '2':
         twiml.say('You selected option two.');
         // Add logic for option two
-        responses.push(2);
+        data.push(2);
         break;
       default:
         askQuestion(twiml, questionNumber, 1); // Repeat the question
