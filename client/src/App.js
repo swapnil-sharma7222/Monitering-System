@@ -19,6 +19,7 @@ export default function App() {
         <Routes>
           <Route path="/verify-otp" element={<Otp/>}/>
           <Route exact path="/" element={<NavBar />} />
+          <Route exact path="/responses" element={<BarChart />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/forgot-password" element={<ResetPasswordPage/>}/>
           <Route path="/reset-password" element={<ChangePasswordPage/>}/>

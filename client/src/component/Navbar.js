@@ -29,28 +29,28 @@ import SignUpForm from '../authantication/signup'
 
 export default function App() {
   const [type, setType] = useState('signIn')
-  const[isEmail,setIsEmail]=useState(true);
-  const  handleOnClick = (text) => {
+  const [isEmail, setIsEmail] = useState(true);
+  const handleOnClick = (text) => {
     if (text !== type) {
       setType(text)
       return
     }
   }
-    const handleEmail = (text) => {
-      setIsEmail(true);
-      if (text !== type) {
-        setType(text)
-        return
-      }
-      
+  const handleEmail = (text) => {
+    setIsEmail(true);
+    if (text !== type) {
+      setType(text)
+      return
     }
-      const handlePhone = (text) => {
-        setIsEmail(false);
-        if (text !== type) {
-          setType(text)
-          return
-        }
-      }
+
+  }
+  const handlePhone = (text) => {
+    setIsEmail(false);
+    if (text !== type) {
+      setType(text)
+      return
+    }
+  }
   const containerClass =
     'container ' + (type === 'signUp' ? 'right-panel-active' : '')
   return (
@@ -58,7 +58,7 @@ export default function App() {
       <h2>Sign in/up Form</h2>
       <div className={containerClass} id="container">
         <SignUpForm />
-        <SignInForm state={isEmail}/>
+        <SignInForm state={isEmail} />
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
