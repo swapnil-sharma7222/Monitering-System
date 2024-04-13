@@ -1,4 +1,5 @@
 const twilio = require('twilio');
+const Responses= require('./../models/responseModel');
 
 // Twilio configurations
 const accountSid = process.env.accountSid;
@@ -7,16 +8,16 @@ const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
 // Create a Twilio client
 const client = new twilio(accountSid, authToken);
-let responses= [];
+let phoneNumber; 
+let data= [];
 // Define routes and controllers
-
 // Endpoint to initiate the IVR call
 const initiateCall = async (req, res) => {
   try {
     const { to } = req.body; // Phone number to call
-
+    phoneNumber= to;
     const call = await client.calls.create({
-      url: 'https://c663-2409-40d4-205e-2609-84a0-b4e7-43e4-285.ngrok-free.app/ivr-call/menu',
+      url: 'https://f2cb-2409-40d4-f5-e724-9536-e16-758a-a8f2.ngrok-free.app/ivr-call/menu',
       to: to,
       from: twilioPhoneNumber
     });    
@@ -31,10 +32,10 @@ const initiateCall = async (req, res) => {
 };
 
 // IVR menu endpoint
-const ivrMenu = (req, res) => {
+const ivrMenu = async (req, res) => {
   try {
     const twiml = new twilio.twiml.VoiceResponse();
-
+    console.log('Welcome to our IVR system.', data);
     // Welcome message
     twiml.say('Welcome to our IVR system.');
 
@@ -51,12 +52,12 @@ const ivrMenu = (req, res) => {
 };
 
 // Function to ask a question
-function askQuestion(twiml, questionNumber, attempts) {
+async function askQuestion(twiml, questionNumber, attempts) {
   const maxAttempts = 3; // Maximum number of attempts before moving to the next question
-
+  console.log("this is askQuestion ", questionNumber);
   if (attempts >= maxAttempts) {
     // Move to the next question
-    responses.push(0);
+    data.push(0);
     moveNextQuestion(twiml, questionNumber + 1);
     return;
   }
@@ -92,6 +93,7 @@ function askQuestion(twiml, questionNumber, attempts) {
 // IVR menu choice handling endpoint
 const handleUsersChoice = async (req, res) => {
   try {
+    console.log("this is user choice handle ",data);
     const twiml = new twilio.twiml.VoiceResponse();
 
     const choice = req.body.Digits;
@@ -101,12 +103,12 @@ const handleUsersChoice = async (req, res) => {
       case '1':
         twiml.say('You selected option one.');
         // Add logic for option one
-        responses.push(1);
+        data.push(1);
         break;
       case '2':
         twiml.say('You selected option two.');
         // Add logic for option two
-        responses.push(2);
+        data.push(2);
         break;
       default:
         askQuestion(twiml, questionNumber, 1); // Repeat the question
@@ -125,13 +127,14 @@ const handleUsersChoice = async (req, res) => {
 
 // Function to move to the next question
 function moveNextQuestion(twiml, nextQuestionNumber) {
+  console.log("this is next question handle ",data);
   if (nextQuestionNumber <= 3) {
     // If there are more questions, ask the next question
     askQuestion(twiml, nextQuestionNumber, 0);
   } else {
     // If all questions are done, say farewell message and hang up
     twiml.say('Thank you for your time. Goodbye!');
-    
+    console.log(data);
     twiml.hangup();
   }
 }

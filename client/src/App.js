@@ -1,5 +1,5 @@
 import { Bar } from 'react-chartjs-2'
-import './App.css'
+
 import { BarChart } from './component/barChart'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import SignInPage from './authantication/signin'
@@ -7,7 +7,8 @@ import SignUpPage from './authantication/signup'
 import NavBar from './component/Navbar'
 import Admin from './component/Admin'
 import { Otp } from './authantication/otp'
-import { ForgotPassword } from './authantication/forgotPassword'
+import  { ResetPasswordPage }  from './authantication/ResetPasswordPage'
+import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 
 export default function App() {
   return (
@@ -19,7 +20,8 @@ export default function App() {
           <Route path="/verify-otp" element={<Otp/>}/>
           <Route exact path="/" element={<NavBar />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/forgot-password" element={<ForgotPassword/>}/>
+          <Route path="/forgot-password" element={<ResetPasswordPage/>}/>
+          <Route path="/reset-password" element={<ChangePasswordPage/>}/>
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/locality" element=""></Route> //exact path is not fixed
