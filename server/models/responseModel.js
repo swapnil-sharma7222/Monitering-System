@@ -1,18 +1,17 @@
 const mongoose = require("mongoose");
-
 const AnswerSchema = new mongoose.Schema({
-  answerId: { 
-    type: String,
+  phoneNumber: { 
+    type: Number,
   },
   data: {
     type: [{
       type: Object,
       required: true,
-    }],
+  }],
   },
   addedAt: { 
-    type: Date, 
-    default: Date.now,
+    type: String, 
+    
   }
 });
 

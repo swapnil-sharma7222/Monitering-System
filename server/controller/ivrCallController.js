@@ -16,8 +16,9 @@ const initiateCall = async (req, res) => {
   try {
     const { to } = req.body; // Phone number to call
     phoneNumber= to;
+    data= [];
     const call = await client.calls.create({
-      url: 'https://f2cb-2409-40d4-f5-e724-9536-e16-758a-a8f2.ngrok-free.app/ivr-call/menu',
+      url: 'https://737a-14-139-226-3.ngrok-free.app/ivr-call/menu',
       to: to,
       from: twilioPhoneNumber
     });    
@@ -35,7 +36,7 @@ const initiateCall = async (req, res) => {
 const ivrMenu = async (req, res) => {
   try {
     const twiml = new twilio.twiml.VoiceResponse();
-    console.log('Welcome to our IVR system.', data);
+    // console.log('Welcome to our IVR system.', data);
     // Welcome message
     twiml.say('Welcome to our IVR system.');
 
@@ -54,10 +55,11 @@ const ivrMenu = async (req, res) => {
 // Function to ask a question
 async function askQuestion(twiml, questionNumber, attempts) {
   const maxAttempts = 3; // Maximum number of attempts before moving to the next question
-  console.log("this is askQuestion ", questionNumber);
+  // console.log("this is askQuestion ", questionNumber);
   if (attempts >= maxAttempts) {
-    // Move to the next question
-    data.push(0);
+    if (attempts === 0) {
+      data.push(0);
+    }
     moveNextQuestion(twiml, questionNumber + 1);
     return;
   }
@@ -86,14 +88,14 @@ async function askQuestion(twiml, questionNumber, attempts) {
   }
 
   // If no input is received, repeat the question
-  // twiml.redirect(`/ivr-call/menu?q=${questionNumber}`);
-  askQuestion(twiml, questionNumber, attempts+ 1);
+  twiml.redirect(`/ivr-call/menu?q=${questionNumber}`);
+  // askQuestion(twiml, questionNumber, attempts+ 1);
 }
 
 // IVR menu choice handling endpoint
 const handleUsersChoice = async (req, res) => {
   try {
-    console.log("this is user choice handle ",data);
+    // console.log("this is user choice handle ",data);
     const twiml = new twilio.twiml.VoiceResponse();
 
     const choice = req.body.Digits;
@@ -126,17 +128,43 @@ const handleUsersChoice = async (req, res) => {
 };
 
 // Function to move to the next question
-function moveNextQuestion(twiml, nextQuestionNumber) {
-  console.log("this is next question handle ",data);
+async function moveNextQuestion(twiml, nextQuestionNumber) {
+  // console.log("this is next question handle ",data);
   if (nextQuestionNumber <= 3) {
     // If there are more questions, ask the next question
     askQuestion(twiml, nextQuestionNumber, 0);
   } else {
     // If all questions are done, say farewell message and hang up
     twiml.say('Thank you for your time. Goodbye!');
-    console.log(data);
+    // console.log(data);
     twiml.hangup();
+    try {
+      const newResponse = await Responses.create({
+        phoneNumber,
+        data,
+        // addedAt: new Date(Date.now()).toISOString().slice(0, 10)
+        addedAt: new Date(Date.now()).toISOString().split('T')[0]
+      });      
+      console.log(newResponse);
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
 
-module.exports = { initiateCall, ivrMenu, handleUsersChoice };
+async function getAllResponses(req, res) {
+  try {
+    let number= "919983465159";
+    console.log(Date.now().toString().split('T')[0]);
+    const response = await Responses.find({ addedAt: Date.now().toString().split('T')[0] });
+    //const response = await Responses.find({ phoneNumber: number });
+    return res.status(200).json({ response });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: err.message,
+      message: "Error in retrieving responses"
+    });
+  }
+}
+module.exports = { initiateCall, ivrMenu, handleUsersChoice, getAllResponses };

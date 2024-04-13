@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { useEffect } from 'react';
 import {
   BarElement,
   CategoryScale,
@@ -9,6 +11,7 @@ import {
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
 
 const options = {
   scales: {
@@ -41,6 +44,25 @@ const data = {
   ],
 }
 
+const getResponses= async()=> {
+  try {
+    console.log(1);
+    const response= await axios.get('http://localhost:5000/ivr-call/responses');
+    console.log(2);
+
+    // const data= await response.json();
+    // console.log(3);
+    console.log(response);
+  } catch (err) {
+    console.warn("This is the error ", err);
+  }
+}
+
 export const BarChart = () => {
-  return <Bar options={options} data={data} />
+  useEffect(()=> {
+    console.log("Hey");
+    getResponses();
+  }, []);
+  // return <Bar options={options} data={data} />
+  return <h1>Swapnil</h1>
 }

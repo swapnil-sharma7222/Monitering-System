@@ -14,7 +14,6 @@ const getLocality = asynchandler(async (req, res) => {
 })
 
 const createLocality = async (req, res) => {
-  console.log('gAshuosh')
   try {
     console.log('Request Body1: ', req.body)
     console.log(req.body.name)
