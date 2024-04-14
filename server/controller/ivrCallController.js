@@ -1,5 +1,5 @@
 const twilio = require('twilio');
-const Responses= require('./../models/responseModel');
+const Responses = require('./../models/responseModel');
 
 // Twilio configurations
 const accountSid = process.env.accountSid;
@@ -8,20 +8,20 @@ const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
 // Create a Twilio client
 const client = new twilio(accountSid, authToken);
-let phoneNumber; 
-let data= [];
+let phoneNumber;
+let data = [];
 // Define routes and controllers
 // Endpoint to initiate the IVR call
 const initiateCall = async (req, res) => {
   try {
     const { to } = req.body; // Phone number to call
-    phoneNumber= to;
-    data= [];
+    phoneNumber = to;
+    data = [];
     const call = await client.calls.create({
-      url: 'https://737a-14-139-226-3.ngrok-free.app/ivr-call/menu',
+      url: 'https://537d-14-139-226-3.ngrok-free.app/ivr-call/menu',
       to: to,
       from: twilioPhoneNumber
-    });    
+    });
 
     res.json(call.sid);
   } catch (error) {
@@ -45,7 +45,7 @@ const ivrMenu = async (req, res) => {
 
     res.send(twiml.toString());
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Error in menu section of the call",
       error: error.message,
     });
@@ -120,7 +120,7 @@ const handleUsersChoice = async (req, res) => {
     moveNextQuestion(twiml, questionNumber + 1);
     res.send(twiml.toString());
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       error: error.message,
       message: "Error in handling user's choices on the call"
     });
@@ -143,8 +143,8 @@ async function moveNextQuestion(twiml, nextQuestionNumber) {
         phoneNumber,
         data,
         // addedAt: new Date(Date.now()).toISOString().slice(0, 10)
-        addedAt: new Date(Date.now()).toISOString().split('T')[0]
-      });      
+        // addedAt: new Date(Date.now()).toISOString().split('T')[0]
+      });
       console.log(newResponse);
     } catch (err) {
       console.error(err);
@@ -153,11 +153,29 @@ async function moveNextQuestion(twiml, nextQuestionNumber) {
 }
 
 async function getAllResponses(req, res) {
+  const { date } = req.body;
+  const dateToQuery = new Date(date); // Set the date you want to query
+  console.log(dateToQuery);
+
+  // Calculate the start and end of the specified date
+  const startOfDay = new Date(dateToQuery);
+  startOfDay.setHours(0, 0, 0, 0); // Set time to the start of the day (00:00:00)
+  console.log(startOfDay);
+
+  const endOfDay = new Date(dateToQuery);
+  endOfDay.setHours(23, 59, 59, 999); // Set time to the end of the day (23:59:59.999)
+  console.log(endOfDay);
+
+
+  // Define the query criteria to find documents within the specified date range
+  const query = {
+    addedAt: {
+      $gte: startOfDay, // Greater than or equal to the start of the day
+      $lt: endOfDay,   // Less than  the end of the day
+    },
+  };
   try {
-    let number= "919983465159";
-    console.log(Date.now().toString().split('T')[0]);
-    const response = await Responses.find({ addedAt: Date.now().toString().split('T')[0] });
-    //const response = await Responses.find({ phoneNumber: number });
+    const response = await Responses.find(query);
     return res.status(200).json({ response });
   } catch (err) {
     console.error(err);

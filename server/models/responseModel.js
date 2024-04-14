@@ -10,8 +10,8 @@ const AnswerSchema = new mongoose.Schema({
   }],
   },
   addedAt: { 
-    type: String, 
-    
+    type: Date, 
+    default: Date.now(),
   }
 });
 
