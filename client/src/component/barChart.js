@@ -38,16 +38,16 @@ const data = {
       label: 'produce',
       data: [100, 9, 180, 50, 40, 20, 40],
       fill: true,
-      backgroundColor: ['green','yellow'], // Set the color to blue
+      backgroundColor: ['green', 'yellow'], // Set the color to blue
       // borderWidth: 30,
     },
   ],
 }
 
-const getResponses= async()=> {
+const getResponses = async () => {
   try {
     console.log(1);
-    const response= await axios.get('http://localhost:5000/ivr-call/responses');
+    const response = await axios.get('http://localhost:5000/ivr-call/responses');
     console.log(2);
 
     // const data= await response.json();
@@ -59,10 +59,16 @@ const getResponses= async()=> {
 }
 
 export const BarChart = () => {
-  useEffect(()=> {
-    console.log("Hey");
-    getResponses();
-  }, []);
+  // useEffect(() => {
+  //   console.log("Hey");
+  //   getResponses();
+  // }, []);
   // return <Bar options={options} data={data} />
-  return <h1>Swapnil</h1>
+  return (
+    <>
+      <h1>Swapnil</h1>
+      <input type="date" id="myDate" value="2024-04-13" onSubmit={getResponses}></input>
+    </>
+  )
+
 }
