@@ -3,9 +3,14 @@
     "concurrently": "^8.2.2"
   },
   "scripts": {
-  "start": "concurrently \"npm run server\" \"npm run client\"",
-  "server": "nodemon server.js", 
-  "client": "cd frontend && npm start" 
-}
-
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server.js",
+    "client": "cd frontend && npm start"
+  },
+  "name": "monitering-system",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }

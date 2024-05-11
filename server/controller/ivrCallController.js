@@ -10,16 +10,22 @@ const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
 // Create a Twilio client
 const client = new twilio(accountSid, authToken);
+const dataFromFrontend=async(req,res)=>{
+  let n;
+  n=req.body.noOfQuestions;
+  let message;
+  message=req.body.message;
+}
 let phoneNumber;
-let data = [0, 0, 0, 0, 0, 0];
-let n;
+let data=Array(n).fill(0);
+
 // Define routes and controllers
 // Endpoint to initiate the IVR call
 const initiateCall = async (req, res) => {
   try {
     const { to } = req.body; // Phone number to call
     phoneNumber = to;
-    data = [0, 0, 0, 0, 0, 0];
+    data = Array(n).fill(0);
     const call = await client.calls.create({
       url: 'https://2c7d-14-139-226-3.ngrok-free.app/ivr-call/menu',
       to: to,
@@ -55,57 +61,28 @@ const ivrMenu = async (req, res) => {
 };
 
 // Function to ask a question
+const maxAttempts = 3; // Maximum number of attempts before moving to the next question
 async function askQuestion(twiml, questionNumber, attempts) {
-  console.log(`Hello from askQuestion and this is ${questionNumber}`);
-  // const maxAttempts = 3; // Maximum number of attempts before moving to the next question
-  // if (attempts >= maxAttempts) {
-  //   if (attempts === 0) {
-  //     data.push(0);
-  //   }
-  //   moveNextQuestion(twiml, questionNumber + 1);
-  //   return;
-  // }
+ /// console.log(`Hello from askQuestion and this is ${questionNumber}`);
+  if (attempts >= maxAttempts) {
+    if (attempts === 0) {
+      data.push(0);
+    }
+    moveNextQuestion(twiml, questionNumber + 1);
+    return;
+  }
 
-  // if (attempts > 0) {
-  //   twiml.say('Invalid number selected. Please try again.');
-  // }
-
-  // const gather = twiml.gather({
-  //   input: 'dtmf',
-  //   numDigits: 1,
-  //   action: `/ivr-call/menu/handle-choice?q=${questionNumber}`
-  // });
-
-  // switch (questionNumber) {
-  //   case 1:
-  //     gather.say('press one if you receive the breakfast, press 2 if you did not received it');
-  //     break;
-  //   case 2:
-  //     gather.say('press one if the quantity of the breakfast was enough, press 2 if it was not enough');
-  //     break;
-  //   case 3:
-  //     gather.say('press one if you receive the lunch, press 2 if you did not received it');
-  //     break;
-  //   case 4:
-  //     gather.say('press one if the quantity of the lunch was enough, press 2 if it was not enough');
-  //     break;
-  //   case 5:
-  //     gather.say('press one if you receive the dinner, press 2 if you did not received it');
-  //     break;
-  //   case 6:
-  //     gather.say('press one if the quantity of the dinner was enough, press 2 if it was not enough');
-  //     break;
-  // }
-  // Define an array of messages for each question
-const messages = [
-  'press one if you receive the breakfast, press 2 if you did not receive it',
-  'press one if the quantity of the breakfast was enough, press 2 if it was not enough',
-  'press one if you receive the lunch, press 2 if you did not receive it',
-  'press one if the quantity of the lunch was enough, press 2 if it was not enough',
-  'press one if you receive the dinner, press 2 if you did not receive it',
-  'press one if the quantity of the dinner was enough, press 2 if it was not enough'
-];
-n= messages.length;
+  if (attempts > 0) {
+    twiml.say('Invalid number selected. Please try again.');
+  }
+// const messages = [
+//   'press one if you receive the breakfast, press 2 if you did not receive it',
+//   'press one if the quantity of the breakfast was enough, press 2 if it was not enough',
+//   'press one if you receive the lunch, press 2 if you did not receive it',
+//   'press one if the quantity of the lunch was enough, press 2 if it was not enough',
+//   'press one if you receive the dinner, press 2 if you did not receive it',
+//   'press one if the quantity of the dinner was enough, press 2 if it was not enough'
+// ];
 const gather = twiml.gather({
   input: 'dtmf',
   numDigits: 1,
@@ -143,7 +120,7 @@ const handleUsersChoice = async (req, res) => {
         data[questionNumber- 1]= 2;
         break;
       default:
-        askQuestion(twiml, questionNumber, 1); // Repeat the question
+        askQuestion(twiml, questionNumber, attempts+1); // Repeat the question
         break;
     }
 
@@ -214,4 +191,4 @@ async function getAllResponses(req, res) {
     });
   }
 }
-module.exports = { initiateCall, ivrMenu, handleUsersChoice, getAllResponses };
+module.exports = { initiateCall, ivrMenu, handleUsersChoice, getAllResponses ,dataFromFrontend};
