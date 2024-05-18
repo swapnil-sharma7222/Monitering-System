@@ -10,7 +10,6 @@ const {
 // router.use(validate)
 router.route('/').get(getLocality);
 router.route('/').post(createLocality);
-// router.post('/xxx', createLocality)
 router.route('/:id').put(updateLocality).delete(deleteLocality)
 module.exports = router
 

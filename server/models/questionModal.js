@@ -1,11 +1,8 @@
 const mongoose = require("mongoose");
 
 const QuestionSchema = new mongoose.Schema({
-  questionNumber: { 
-    type: Number,
-  },
-  questionText: { 
-    type: String, 
+  questionText: {
+    type: [String],
     required: true,
   },
   addedAt: { 

@@ -1,17 +1,27 @@
-function responsesToGraph (response){
-  const arrayOfData= response.map(doc=> doc.data);
-  console.log(arrayOfData);
-  let count1= 0, count2= 0, count3= 0, n= arrayOfData.length;
+const  responsesToGraph =(responses) =>{
+  const arrayOfData= responses.map(doc=> doc.data);
+    let inputToGraph = [];
+  // Iterate over each question index
+  for (let i = 0; i < arrayOfData[0].length; i++) {
+    // Initialize counts for option 1 and option 2 for this question
+    let countOption1 = 0;
+    let countOption2 = 0;
 
-  arrayOfData.map((ind)=> {
-    console.log(ind);
-    if(ind[0]== 1)  count1++;
-    if(ind[1]== 1)  count2++;
-    if(ind[2]== 1)  count3++;
-  })
+    // Iterate over each user's response
+    arrayOfData.forEach(response => {
+      // If the user chose option 1, increment countOption1
+      if (response[i] === 1) {
+        countOption1++;
+      }
+      // If the user chose option 2, increment countOption2
+      else if (response[i] === 2) {
+        countOption2++;
+      }
+    });
 
-  let inputToGraph= [count1, n- count1, count2, n- count2, count3, n- count3];
+    // Push an array for this question to the inputToGraph array
+    inputToGraph.push([i + 1, countOption1, countOption2]);
+  } 
   return inputToGraph;
 }
-
-module.exports= responsesToGraph;
+ module.exports = responsesToGraph;

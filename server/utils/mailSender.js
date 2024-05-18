@@ -22,9 +22,10 @@ const mailSender = async (email, title, body) => {
       html: body,
     });
     console.log("Email info: ", info);
-    return info;
+    return;
   } catch (error) {
     console.log(error.message);
+    throw new Error('Could not send email: ' + error.message);
   }
 };
 

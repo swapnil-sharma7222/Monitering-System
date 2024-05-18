@@ -23,6 +23,7 @@ app.use('/user', require('./routes/user2Routes'));
 app.use("/user",require('./routes/otpRoutes'));
 app.use("/accounts",require('./routes/forgetPassword'));
 app.use("/ivr-call", require('./routes/ivrCall'));
+app.use('/register-new-user', require('./routes/registerNewUserRoute'));
 
 
 app.listen(5000, () => {

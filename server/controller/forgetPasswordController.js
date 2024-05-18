@@ -18,6 +18,17 @@ function decrypt(encryptedData, key) {
 const forgetPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
+    
+    // Check if user is already present
+    const checkUserPresent = await User.findOne({ email });
+
+    // If user found with provided email
+    if (!checkUserPresent) {
+      return res.status(501).json({
+        success: false,
+        message: 'Incorrect Email',
+      });
+    }
     // Get the current timestamp in milliseconds
     const currentTime = Date.now();
     
@@ -29,16 +40,6 @@ const forgetPassword = async (req, res, next) => {
     console.log(expiryTimestamp);
     const recoveryLink = `${process.env.clientURL}accounts/reset-password?email=${email}&expiryTime=${expiryTimestamp}`;
     console.log(recoveryLink);
-    // Check if user is already present
-    const checkUserPresent = await User.findOne({ email });
-
-    // If user found with provided email
-    if (!checkUserPresent) {
-      return res.status(501).json({
-        success: false,
-        message: 'Incorrect Email',
-      });
-    }
 
     async function sendVerificationEmail(email) {
       try {
@@ -50,15 +51,24 @@ const forgetPassword = async (req, res, next) => {
             <p>The link expires in 10 minutes</p>`
         );
         console.log("Email sent successfully: ", mailResponse);
+        return res.status(201).json({
+          success: true,
+          message: "Send verification email function working properly....",
+        });
       } catch (error) {
         console.log("Error occurred while sending email: ", error);
-        throw error;
+        return res.status(501).json({
+          success: true,
+          message: "Error in send verification email function....",
+        });
       }
     }
     sendVerificationEmail(email);
+    return res.status(201).json({
+      success: true,
+      message: "Email Sent....",
+    });
   } catch (error) {
-    // console.warn(error);
-    // console.error(error);
     return res.status(401).json({
       success: false,
       message: 'Internal Server Error.... Could not send you the password reset Email',
