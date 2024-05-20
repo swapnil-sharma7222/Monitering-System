@@ -1,4 +1,4 @@
-const LocalUsers= require('./../models/localUsersModel');
+const LocalUsers= require('../models/localUsersModel');
 
 async function getAllUsers(locality) {
   try {
