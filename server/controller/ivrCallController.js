@@ -2,7 +2,7 @@ const twilio = require('twilio');
 const Responses = require('./../models/responseModel');
 const responsesToGraph= require('./../utils/responsesToGraph');
 const { Gather } = require('twilio/lib/twiml/VoiceResponse');
-
+const User=require('./../models/userModel')
 // Twilio configurations
 const accountSid = process.env.accountSid;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -10,11 +10,11 @@ const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
 // Create a Twilio client
 const client = new twilio(accountSid, authToken);
+let n;
+let messages;
 const dataFromFrontend=async(req,res)=>{
-  let n;
   n=req.body.noOfQuestions;
-  let message;
-  message=req.body.message;
+  messages=req.body.message;
 }
 let phoneNumber;
 let data=Array(n).fill(0);
@@ -65,9 +65,6 @@ const maxAttempts = 3; // Maximum number of attempts before moving to the next q
 async function askQuestion(twiml, questionNumber, attempts) {
  /// console.log(`Hello from askQuestion and this is ${questionNumber}`);
   if (attempts >= maxAttempts) {
-    if (attempts === 0) {
-      data.push(0);
-    }
     moveNextQuestion(twiml, questionNumber + 1);
     return;
   }
@@ -75,27 +72,15 @@ async function askQuestion(twiml, questionNumber, attempts) {
   if (attempts > 0) {
     twiml.say('Invalid number selected. Please try again.');
   }
-// const messages = [
-//   'press one if you receive the breakfast, press 2 if you did not receive it',
-//   'press one if the quantity of the breakfast was enough, press 2 if it was not enough',
-//   'press one if you receive the lunch, press 2 if you did not receive it',
-//   'press one if the quantity of the lunch was enough, press 2 if it was not enough',
-//   'press one if you receive the dinner, press 2 if you did not receive it',
-//   'press one if the quantity of the dinner was enough, press 2 if it was not enough'
-// ];
+
 const gather = twiml.gather({
   input: 'dtmf',
   numDigits: 1,
-  action: `/ivr-call/menu/handle-choice?q=${questionNumber}`
+  action: `/ivr-call/menu/handle-choice?q=${questionNumber}&attempts=${attempts}`
 });
 gather.say(messages[questionNumber- 1]);
-// Loop through the messages array and use gather.say to speak each message
-// while (questionNumber<= n) {
-//   gather.say(messages[questionNumber - 1]); // Array is 0-indexed, so we subtract 1 from questionNumber
-// }
-  // If no input is received, repeat the question
+
   twiml.redirect(`/ivr-call/menu?q=${questionNumber}`);
-  // askQuestion(twiml, questionNumber, attempts+ 1);
 }
 
 // IVR menu choice handling endpoint
@@ -105,7 +90,7 @@ const handleUsersChoice = async (req, res) => {
     
     const choice = req.body.Digits;
     const questionNumber = parseInt(req.query.q);
-    
+    const attempts = parseInt(req.query.attempts) || 0;
     switch (choice) {
       case '1':
         twiml.say('You selected option one.');
@@ -191,4 +176,43 @@ async function getAllResponses(req, res) {
     });
   }
 }
-module.exports = { initiateCall, ivrMenu, handleUsersChoice, getAllResponses ,dataFromFrontend};
+const compareResponse = async (req, res) => {
+  try {
+    const { date } = req.body;
+    const dateToQuery = new Date(date); // Set the date you want to query
+
+    // Calculate the start and end of the specified date
+    const startOfDay = new Date(dateToQuery);
+    startOfDay.setHours(0, 0, 0, 0); // Set time to the start of the day (00:00:00)
+
+    const endOfDay = new Date(dateToQuery);
+    endOfDay.setHours(23, 59, 59, 999); // Set time to the end of the day (23:59:59.999)
+
+    // Define the query criteria to find documents within the specified date range
+    const query = {
+      addedAt: {
+        $gte: startOfDay, // Greater than or equal to the start of the day
+        $lt: endOfDay,   // Less than the end of the day
+      },
+    };
+
+    // Count the total number of responses for the day
+    const totalResponses = await Responses.countDocuments(query);
+
+    // Fetch the total number of users from your database
+    const totalUsers = await User.countDocuments();
+
+    // Calculate the ratio of new responses to total users
+    const newResponseRatio = (100 - parseFloat(totalResponses / totalUsers)*100).toFixed(2);
+
+    res.json({ totalResponses,totalUsers, newResponseRatio });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: err.message,
+      message: "Error in comparing responses"
+    });
+  }
+};
+
+module.exports = { initiateCall, ivrMenu, handleUsersChoice, getAllResponses ,compareResponse};

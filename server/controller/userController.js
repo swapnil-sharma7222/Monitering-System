@@ -33,7 +33,8 @@ const signup = async (req, res) => {
     let hashedPassword
     try {
       hashedPassword = await bcrypt.hash(password, 10)
-    } catch (error) {
+    } 
+    catch (error) {
       return res.status(500).json({
         success: false,
         message: `Hashing password error for ${password}: ` + error.message,
@@ -55,6 +56,7 @@ const signup = async (req, res) => {
       message: 'User registered successfully',
       data: user,
     })
+
   } catch (error) {
     res.status(500).json({
       status: 'failed',
@@ -63,7 +65,17 @@ const signup = async (req, res) => {
     })
   }
 }
-
+const totalUsers = async (req, res) => {
+  try {
+  
+      const users = await User.find();
+      const totalUsersCount = users.length;
+      res.json({ totalUsers: totalUsersCount });
+  } catch (err) {
+      console.error("Error while fetching total users based on phone number:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 const signinwithEmail = async (req, res) => {
   try {
     const { email, password } = req.body
@@ -130,4 +142,4 @@ const signinwithPhoneNumber = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-module.exports = { signup, signinwithEmail, signinwithPhoneNumber };
+module.exports = { signup, signinwithEmail, signinwithPhoneNumber ,totalUsers};

@@ -4,9 +4,11 @@ const QuestionSchema = new mongoose.Schema({
   questionNumber: { 
     type: Number,
   },
-  questionText: { 
-    type: String, 
-    required: true,
+  questionText: {
+    type: [{
+      type: String,
+      required: true,
+    }]
   },
   addedAt: { 
     type: Date, 
