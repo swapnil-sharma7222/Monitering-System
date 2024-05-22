@@ -1,4 +1,4 @@
-const Questions = require('./../models/questionModal');
+const Questions = require('../models/questionModal');
 
 const getQuestions = async () => {
   try {

@@ -95,8 +95,8 @@ const signinwithEmail = async (req, res) => {
             id: user.id,
           },
         },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
+        process.env.ACCESS_TOKEN_SECERT,
+        { expiresIn: '1h' }
       )
       res.status(200).json({ accessToken })
     } else {
