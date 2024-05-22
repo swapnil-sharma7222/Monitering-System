@@ -5,6 +5,7 @@ const localitySchema = mongoose.Schema({
     type: String,
     required: [true, "please add locality name"],
   },
+
 },
   {
     timestamps: true,
