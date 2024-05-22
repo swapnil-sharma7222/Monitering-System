@@ -8,6 +8,10 @@ const QuestionSchema = new mongoose.Schema({
   addedAt: { 
     type: Date, 
     default: Date.now 
+  },
+  locality: {
+    type: String,
+    required: true
   }
 });
 

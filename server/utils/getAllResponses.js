@@ -34,6 +34,7 @@ async function getAllResponses(req, res) {
       message: "Error in retrieving responses"
     });
   }
+  //console.log(inputToGraph);
 }
 
 module.exports= getAllResponses;

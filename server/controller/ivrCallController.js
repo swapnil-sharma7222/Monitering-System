@@ -25,7 +25,9 @@ let data=Array(n).fill(0);
 const createQuestions = async (req, res) => {
      
   const excuses = req.body.excuses;
+  console.log(excuses);
   const locality = req.body.locality;
+  console.log(locality);
   messages = excuses;
   n = messages.length;
   localityToCall = locality;
@@ -33,7 +35,9 @@ const createQuestions = async (req, res) => {
   try {
     const questions = await Questions.create({
       questionText: excuses,
+      locality: localityToCall
     });
+    console.log(questions);
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -43,7 +47,7 @@ const createQuestions = async (req, res) => {
 }
 const initiateCall = async (req, res) => {
   try{
-    const questions = createQuestions(req,res) ;
+    const questions = await createQuestions(req,res);
     const phoneNumbersToCall = await getAllUsers(localityToCall);
     console.log('These are the phone Numbers to call upon', phoneNumbersToCall);
 
@@ -55,7 +59,7 @@ const initiateCall = async (req, res) => {
       let to = numbers[index];
       to= "+91"+ to;
       client.calls.create({
-        url: 'https://eb2f-2409-4089-8606-805f-307f-2ce0-fa6b-33f7.ngrok-free.app/ivr-call/menu',
+        url: 'https://9e6c-2409-4089-8600-d699-54bd-47b-347b-bf23.ngrok-free.app/ivr-call/menu',
         to: to,
         from: twilioPhoneNumber
       }).then(call => {

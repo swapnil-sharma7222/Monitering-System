@@ -52,6 +52,7 @@ import './Excuse.css'; // Assuming you have a CSS file for styling
 
 const Graph = () => {
 	const [numQuestions, setNumQuestions] = useState(1);
+	const [locality, setLocality] = useState('');
 	const [excuses, setExcuses] = useState(Array.from({ length: 1 }, () => ''));
 
 	const handleNumQuestionsChange = (e) => {
@@ -70,8 +71,8 @@ const Graph = () => {
 		// Handle submission logic here
 		console.log('Submitted excuses:', excuses);
 		try {
-			const request = axios.post("http://localhost:5000/ivr-call", {
-				excuses
+			const request = axios.post("http://localhost:5000/ivr-call/initiate", {
+				excuses, locality
 			});
 			return;
 		} catch (error) {
@@ -82,6 +83,7 @@ const Graph = () => {
 
 	return (
 		<div className="excuse-form">
+		<input type="text" value={locality} onChange={e=> setLocality( e.target.value)}/>
 			<label htmlFor="num-questions">Select number of excuses:</label>
 			<select id="num-questions" value={numQuestions} onChange={handleNumQuestionsChange}>
 				{[...Array(10).keys()].map((num) => (

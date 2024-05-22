@@ -2,7 +2,6 @@ const Locality = require('../models/localityModels')
 const asynchandler = require('express-async-handler')
 
 const getLocality = asynchandler(async (req, res) => {
-  console.log('hello from getLocality')
   try {
     const contacts = await Locality.find()
     console.log(contacts.length)
