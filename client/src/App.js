@@ -1,6 +1,6 @@
-import { Bar } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2';
 
-import { BarChart } from './component/barChart'
+// import { BarChart } from './component/barChart'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import SignInPage from './authantication/signin'
 import SignUpPage from './authantication/signup'
@@ -9,6 +9,7 @@ import Admin from './component/Admin'
 import { Otp } from './authantication/otp'
 import  { ResetPasswordPage }  from './authantication/ResetPasswordPage'
 import { ChangePasswordPage } from "./pages/ChangePasswordPage";
+import Graph from './component/Graph';
 
 export default function App() {
   return (
@@ -17,9 +18,10 @@ export default function App() {
         {/* <BarChart className="Bar" /> */}
         {/* <SignInPage/> */}
         <Routes>
+          <Route path='/main' element={<Graph/>}></Route>
           <Route path="/verify-otp" element={<Otp/>}/>
           <Route exact path="/" element={<NavBar />} />
-          <Route exact path="/responses" element={<BarChart />} />
+          {/* <Route exact path="/responses" element={<BarChart />} /> */}
           <Route path="/admin" element={<Admin />} />
           <Route path="/forgot-password" element={<ResetPasswordPage/>}/>
           <Route path="/reset-password" element={<ChangePasswordPage/>}/>

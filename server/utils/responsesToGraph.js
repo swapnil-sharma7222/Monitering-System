@@ -1,5 +1,4 @@
 
-
 const  responsesToGraph =(responses) =>{
   const arrayOfData= responses.map(doc=> doc.data);
     let inputToGraph = [];
@@ -19,11 +18,10 @@ const  responsesToGraph =(responses) =>{
       else if (response[i] === 2) {
         countOption2++;
       }
-    });
-
-    // Push an array for this question to the inputToGraph array
+    });    // Push an array for this question to the inputToGraph array
     inputToGraph.push([i + 1, countOption1, countOption2]);
   } 
   return inputToGraph;
 }
  module.exports = responsesToGraph;
+

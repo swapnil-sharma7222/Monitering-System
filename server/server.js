@@ -21,13 +21,13 @@ app.use('/locality', require('./routes/userRoutes'))
 
 app.use('/user', require('./routes/user2Routes'));
 
-app.use('/user',require("./routes/otpRoutes"));
 app.use("/accounts",require("./routes/forgetPassword"));
 
 app.use("/user",require('./routes/otpRoutes'));
 app.use("/accounts",require('./routes/forgetPassword'));
 app.use("/ivr-call", require('./routes/ivrCall'));
-//>>>>>>> d47964eba4b0430b7bf6500aeaa7ec26ab75df5e
+
+app.use('/register-new-user', require('./routes/registerNewUserRoute'));
 
 
 app.listen(5000, () => {
