@@ -20,9 +20,13 @@ app.use((req, res, next) => {
 app.use('/locality', require('./routes/userRoutes'))
 
 app.use('/user', require('./routes/user2Routes'));
+
+app.use("/accounts",require("./routes/forgetPassword"));
+
 app.use("/user",require('./routes/otpRoutes'));
 app.use("/accounts",require('./routes/forgetPassword'));
 app.use("/ivr-call", require('./routes/ivrCall'));
+
 app.use('/register-new-user', require('./routes/registerNewUserRoute'));
 app.use('/dashboard', require('./routes/dashboardDataRoute'));
 

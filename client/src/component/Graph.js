@@ -47,6 +47,10 @@ const Graph = () => {
 
 export default Graph;
 
+const Graph = () => {
+	const [numQuestions, setNumQuestions] = useState(1);
+	const [locality, setLocality] = useState('');
+	const [excuses, setExcuses] = useState(Array.from({ length: 1 }, () => ''));
 
 // import React, { useState } from 'react';
 // import axios from 'axios';
@@ -56,17 +60,45 @@ export default Graph;
 // 	const [numQuestions, setNumQuestions] = useState(1);
 // 	const [excuses, setExcuses] = useState(Array.from({ length: 1 }, () => ''));
 
-// 	const handleNumQuestionsChange = (e) => {
-// 		const value = parseInt(e.target.value);
-// 		setNumQuestions(value);
-// 		setExcuses(Array.from({ length: value }, () => ''));
-// 	};
+	const handleSubmit = () => {
+		// Handle submission logic here
+		console.log('Submitted excuses:', excuses);
+		try {
+			const request = axios.post("http://localhost:5000/ivr-call/initiate", {
+				excuses, locality
+			});
+			return;
+		} catch (error) {
+			console.log(error);
+			return;
+		}
+	};
 
-// 	const handleExcuseChange = (index, e) => {
-// 		const newExcuses = [...excuses];
-// 		newExcuses[index] = e.target.value;
-// 		setExcuses(newExcuses);
-// 	};
+	return (
+		<div className="excuse-form">
+		<input type="text" value={locality} onChange={e=> setLocality( e.target.value)}/>
+			<label htmlFor="num-questions">Select number of excuses:</label>
+			<select id="num-questions" value={numQuestions} onChange={handleNumQuestionsChange}>
+				{[...Array(10).keys()].map((num) => (
+					<option key={num + 1} value={num + 1}>
+						{num + 1}
+					</option>
+				))}
+			</select>
+			{excuses.map((excuse, index) => (
+				<input
+					key={index}
+					type="text"
+					placeholder={`Excuse ${index + 1}`}
+					value={excuse}
+					onChange={(e) => handleExcuseChange(index, e)}
+				/>
+			))}
+			<button onClick={handleSubmit}>Submit</button>
+		</div>
+	);
+};
+
 
 // 	const handleSubmit = () => {
 // 		// Handle submission logic here

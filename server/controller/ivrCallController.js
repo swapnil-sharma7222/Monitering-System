@@ -5,7 +5,7 @@ const getQuestions = require('../utils/getAllQuestions');
 const getAllResponses = require('./../utils/getAllResponses');
 const getAllUsers = require('../utils/getAllUsersWithGivenLocality');
 const { Gather } = require('twilio/lib/twiml/VoiceResponse');
-
+const User=require('./../models/userModel');
 // Twilio configurations
 const accountSid = process.env.accountSid;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -13,23 +13,41 @@ const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
 // Create a Twilio client
 const client = new twilio(accountSid, authToken);
-let phoneNumber;
-let data;
+
 let localityToCall;
-let flag = true;
 let messages;
 let n;
+let phoneNumber;
+let data=Array(n).fill(0);
+
 // Define routes and controllers
 // Endpoint to initiate the IVR call
-const initiateCall = async (req, res) => {
+const createQuestions = async (req, res) => {
+     
+  const excuses = req.body.excuses;
+  console.log(excuses);
+  const locality = req.body.locality;
+  console.log(locality);
+  messages = excuses;
+  n = messages.length;
+  localityToCall = locality;
+  // Save questions to the database
   try {
-    if(flag){
-      messages= await getQuestions();
-      n= messages.length;
-      flag= false;
-    }
-    const { locality } = req.body; // Locality to call
-    localityToCall = locality;
+    const questions = await Questions.create({
+      questionText: excuses,
+      locality: localityToCall
+    });
+    console.log(questions);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+      message: "Error in Creating the questions"
+    });
+  }
+}
+const initiateCall = async (req, res) => {
+  try{
+    const questions = await createQuestions(req,res);
     const phoneNumbersToCall = await getAllUsers(localityToCall);
     console.log('These are the phone Numbers to call upon', phoneNumbersToCall);
 
@@ -41,7 +59,7 @@ const initiateCall = async (req, res) => {
       let to = numbers[index];
       to= "+91"+ to;
       client.calls.create({
-        url: 'https://8f7c-2409-40d4-100c-5bb4-2841-3ac9-a8fe-68e7.ngrok-free.app/ivr-call/menu',
+        url: 'https://9e6c-2409-4089-8600-d699-54bd-47b-347b-bf23.ngrok-free.app/ivr-call/menu',
         to: to,
         from: twilioPhoneNumber
       }).then(call => {
@@ -69,7 +87,6 @@ const initiateCall = async (req, res) => {
       message: "Error in initiating the calls"
     });
   }
-  flag= true;
 };
 // const initiateCall = async (req, res) => {
 //   try {
@@ -118,6 +135,7 @@ const ivrMenu = async (req, res) => {
 };
 
 // Function to ask a question
+const maxAttempts = 3; // Maximum number of attempts before moving to the next question
 async function askQuestion(twiml, questionNumber, attempts) {
   console.log(`Hello from askQuestion and this is question number ${questionNumber}`);
   // const maxAttempts = 3; // Maximum number of attempts before moving to the next question
@@ -129,9 +147,9 @@ async function askQuestion(twiml, questionNumber, attempts) {
   //   return;
   // }
 
-  // if (attempts > 0) {
-  //   twiml.say('Invalid number selected. Please try again.');
-  // }
+  if (attempts > 0) {
+    twiml.say('Invalid number selected. Please try again.');
+  }
 
   // const gather = twiml.gather({
   //   input: 'dtmf',
@@ -189,7 +207,6 @@ const handleUsersChoice = async (req, res) => {
 
     const choice = req.body.Digits;
     const questionNumber = parseInt(req.query.q);
-
     switch (choice) {
       case '1':
         twiml.say('You selected option one.');
@@ -204,7 +221,7 @@ const handleUsersChoice = async (req, res) => {
         data[questionNumber - 1] = 2;
         break;
       default:
-        askQuestion(twiml, questionNumber, 1); // Repeat the question
+        askQuestion(twiml, questionNumber, attempts+1); // Repeat the question
         break;
     }
 
