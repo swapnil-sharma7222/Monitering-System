@@ -1,6 +1,7 @@
 const Locality = require('../models/localityModels');
 const LocalUsers = require('../models/localUsersModel');
 const Questions = require('./../models/questionModal');
+const getAllResponses = require('./getAllResponses');
 
 async function getAllLocalUser() {
   try {
@@ -25,7 +26,9 @@ async function getAllLocality() {
 const getDates = async (req, res) => {
   try {
     const dates = await Questions.distinct('addedAt');
-    return res.json({ dates });
+    const dateParts = dates.map(date => date.toISOString().split('T')[0]);
+
+    return res.json({ dateParts });
   } catch (error) {
     console.error('Error fetching dates:', error);
     return []; // Return an empty array in case of an error
@@ -56,8 +59,6 @@ const getQuestionForDashboard = async (req, res) => {
 
     const endOfDay = new Date(dateToQuery);
     endOfDay.setHours(23, 59, 59, 999); // Set time to the end of the day (23:59:59.999)
-    // console.log(endOfDay);
-
 
     // Define the query criteria to find documents within the specified date range
     const query = {
@@ -65,23 +66,21 @@ const getQuestionForDashboard = async (req, res) => {
         $gte: startOfDay, // Greater than or equal to the start of the day
         $lt: endOfDay,   // Less than  the end of the day
       },
+      locality: locality,
     };
 
-    const responses = await Questions.find({
-      addedAt: date,
-      locality: locality
-    });
-    console.log(responses);
+    const responses = await Questions.find(query);
     const data = responses.map((response) => {
       return response.questionText;
     });
-    console.log(data);
+    res.json({ data });
   } catch (err) {
     console.error('Error fetching questions:', err);
     return []; // Return an empty array in case of an error
   }
 }
-const getGraphData = () => {
-  return;
+const getGraphData = (req, res) => {
+  return getAllResponses(req, res);
 }
+
 module.exports = { getAllLocalUser, getAllLocality, getDates, getLocalities, getGraphData, getQuestionForDashboard };

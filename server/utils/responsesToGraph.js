@@ -1,8 +1,14 @@
 const  responsesToGraph =(responses) =>{
   const arrayOfData= responses.map(doc=> doc.data);
-    let inputToGraph = [];
+  let inputToGraph = [];
+  let n;
+  if(arrayOfData[0]){
+    n= arrayOfData[0].length;
+  }else{
+    n= 0;
+  }
   // Iterate over each question index
-  for (let i = 0; i < arrayOfData[0].length; i++) {
+  for (let i = 0; i < n; i++) {
     // Initialize counts for option 1 and option 2 for this question
     let countOption1 = 0;
     let countOption2 = 0;
@@ -24,4 +30,4 @@ const  responsesToGraph =(responses) =>{
   } 
   return inputToGraph;
 }
- module.exports = responsesToGraph;
+module.exports = responsesToGraph;

@@ -2,9 +2,8 @@ const Responses = require('./../models/responseModel');
 const responsesToGraph= require('./responsesToGraph');
 
 async function getAllResponses(req, res) {
-  const { date } = req.body;
+  const { date, locality } = req.body;
   const dateToQuery = new Date(date); // Set the date you want to query
-  // console.log(dateToQuery);
 
   // Calculate the start and end of the specified date
   const startOfDay = new Date(dateToQuery);
@@ -22,11 +21,13 @@ async function getAllResponses(req, res) {
       $gte: startOfDay, // Greater than or equal to the start of the day
       $lt: endOfDay,   // Less than  the end of the day
     },
+    locality: locality,
   };
   try {
     const response = await Responses.find(query);
     const inputToGraph= responsesToGraph(response);
     return res.status(200).json({ inputToGraph });
+    // console.log(response);
   } catch (err) {
     console.error(err);
     res.status(500).json({

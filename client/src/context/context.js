@@ -6,9 +6,19 @@ export const StateProvider = ({ children }) => {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [mobileNo, setMobileNo] = useState('')
+  const [password, setPassword] = useState('')
   return (
     <StateContext.Provider
-      value={{ email, setEmail, name, setName, mobileNo, setMobileNo }}
+      value={{
+        email,
+        setEmail,
+        name,
+        setName,
+        mobileNo,
+        setMobileNo,
+        password,
+        setPassword,
+      }}
     >
       {children}
     </StateContext.Provider>

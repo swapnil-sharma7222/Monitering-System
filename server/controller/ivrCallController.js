@@ -233,6 +233,7 @@ async function moveNextQuestion(twiml, nextQuestionNumber) {
       const newResponse = await Responses.create({
         phoneNumber,
         data,
+        localityToCall,
       });
       console.log(newResponse);
     } catch (err) {

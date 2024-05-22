@@ -6,7 +6,7 @@ const {getAllLocalUser, getQuestionForDashboard, getDates, getLocalities, getGra
 router.get('/date', getDates);
 router.get('/locality', getLocalities);
 router.get('/localUsers', getAllLocalUser);
-router.post('/', getGraphData);
+router.post('/graphData', getGraphData);
 router.post('/questions-for-dashboard', getQuestionForDashboard);
 
 module.exports= router;
