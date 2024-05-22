@@ -1,7 +1,7 @@
 const twilio = require('twilio');
 const Responses = require('./../models/responseModel');
 const Questions = require('./../models/questionModal');
-const getQuestions = require('./../utils/getQuestions');
+const getQuestions = require('../utils/getAllQuestions');
 const getAllResponses = require('./../utils/getAllResponses');
 const getAllUsers = require('../utils/getAllUsersWithGivenLocality');
 const { Gather } = require('twilio/lib/twiml/VoiceResponse');

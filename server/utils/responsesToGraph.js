@@ -20,7 +20,7 @@ const  responsesToGraph =(responses) =>{
     });
 
     // Push an array for this question to the inputToGraph array
-    inputToGraph.push([i + 1, countOption1, countOption2]);
+    inputToGraph.push({Ques : i + 1, uv:countOption1, pv:countOption2});
   } 
   return inputToGraph;
 }

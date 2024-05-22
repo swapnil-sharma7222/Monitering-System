@@ -24,7 +24,7 @@ app.use("/user",require('./routes/otpRoutes'));
 app.use("/accounts",require('./routes/forgetPassword'));
 app.use("/ivr-call", require('./routes/ivrCall'));
 app.use('/register-new-user', require('./routes/registerNewUserRoute'));
-
+app.use('/dashboard', require('./routes/dashboardDataRoute'));
 
 app.listen(5000, () => {
   console.log('serving on port 5000....');
