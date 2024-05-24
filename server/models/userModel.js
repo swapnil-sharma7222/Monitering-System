@@ -1,25 +1,33 @@
-const mongoose =require("mongoose");
-const validator=require("validator");
+const mongoose = require("mongoose");
+const validator = require("validator");
 
-const UserSchema=mongoose.Schema({
+const UserSchema = mongoose.Schema({
+
     name:
     {
-        type:String,
-        required:[true,"please add locality name"],
+        type: String,
+        required: [true, "please add locality name"],
     },
     email:
     {
-        type:String,
-        required:[true,"please add email"],
-        unique:[true,"please add unique email"],
-        validate:[validator.isEmail,"please add valid email"],
+        type: String,
+        required: [true, "please add email"],
+        unique: [true, "please add unique email"],
+        validate: [validator.isEmail, "please add valid email"],
 
+    },
+    phoneNumber:
+    {
+        type: Number,
+        required: [true, "please add phoneNumber"],
+        unique: [true, "please add unique phoneNumber"],
+        validate: [validator.isMobilePhone, "please add valid email"],
     },
     password:
     {
-        type:String,
-        required:[true,"please add password"],
-        minlenth:8,
+        type: String,
+        required: [true, "please add password"],
+        minlenth: 8,
     },
     // passwordConfirm:
     // {
@@ -33,10 +41,14 @@ const UserSchema=mongoose.Schema({
     //         message: 'Passwords do not match'
     //     }
     // }
+    role: {
+        type: String,
+        enum: ['Admin', 'Student', 'Visitor']
+    }
 },
-{
-    timestamps:true,
-}
+    {
+        timestamps: true,
+    }
 );
 
-module.exports=mongoose.model("User",UserSchema);
+module.exports = mongoose.model("User", UserSchema);
